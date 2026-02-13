@@ -13,8 +13,9 @@ PACKET_SIZE = 1024
 SEQ_ID_SIZE = 4
 MESSAGE_SIZE = PACKET_SIZE - SEQ_ID_SIZE
 
-throughput_start = time.time()
 sender = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+throughput_start = time.time()
+
 sender.bind(sender_addr)
 sender.settimeout(1)
 
@@ -32,43 +33,51 @@ with open("docker/file.mp3", "rb") as file:
         buf = file.read(MESSAGE_SIZE)
         
 i = 0
+start_time_flag = True
 last_ack = False
 
 while True:
     try:
-        ppd_start = time.time()
         if i == len(message_array):
             sender.sendto(create_packet(curr_seq_id, b''), receiver_addr)
         else:
             sender.sendto(create_packet(curr_seq_id, message_array[i]), receiver_addr)
+            
+            if start_time_flag:
+                ppd_start = time.time()
+                start_time_flag = False
         
         packet, _ = sender.recvfrom(PACKET_SIZE)
-        next_seq_id, ack = packet[:SEQ_ID_SIZE], packet[SEQ_ID_SIZE:].strip()
+        next_seq_id, ack = packet[:SEQ_ID_SIZE], packet[SEQ_ID_SIZE:]
         
         next_seq_id = int.from_bytes(next_seq_id, signed=True, byteorder='big')
+        # print("Next seq id received is: ", next_seq_id)
         
         if next_seq_id > curr_seq_id and ack == b'ack':
             i += 1
             curr_seq_id = next_seq_id
 
-            # print(i, " packets delivered")
+            print(i, " packets delivered")
             ppd_end = time.time()
             ppd = ppd_end - ppd_start
             ppd_array.append(ppd)
+            start_time_flag = True
             
         elif i == len(message_array) and ack == b'ack':
-                print("This happened first")
+                # print("This happened first")
                 last_ack = True
                 throughput_end = time.time()
 
         elif ack == b'fin' and last_ack:
-            print("This happens second")
+            # print("This happens second")
             sender.sendto(create_packet(curr_seq_id, b'==FINACK=='), receiver_addr)
             break
         else:
+            # print("repeat") - never happened
             continue
         
     except socket.timeout:
+        # print("timeout")
         continue
 
 throughput = throughput_end - throughput_start
