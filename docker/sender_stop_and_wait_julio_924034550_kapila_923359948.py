@@ -32,6 +32,7 @@ with open("docker/file.mp3", "rb") as file:
         buf = file.read(MESSAGE_SIZE)
         
 i = 0
+last_ack = False
 
 while True:
     try:
@@ -47,17 +48,21 @@ while True:
         next_seq_id = int.from_bytes(next_seq_id, signed=True, byteorder='big')
         
         if next_seq_id > curr_seq_id and ack == b'ack':
-            if i == len(message_array):
-                throughput_end = time.time()
-            else:
-                i += 1
+            i += 1
             curr_seq_id = next_seq_id
 
+            # print(i, " packets delivered")
             ppd_end = time.time()
             ppd = ppd_end - ppd_start
             ppd_array.append(ppd)
+            
+        elif i == len(message_array) and ack == b'ack':
+                print("This happened first")
+                last_ack = True
+                throughput_end = time.time()
 
-        elif ack == b'fin':
+        elif ack == b'fin' and last_ack:
+            print("This happens second")
             sender.sendto(create_packet(curr_seq_id, b'==FINACK=='), receiver_addr)
             break
         else:
@@ -70,4 +75,4 @@ throughput = throughput_end - throughput_start
 ppd_avg = statistics.mean(ppd_array)
 performance = 0.3 * throughput / 1000 + 0.7 / ppd_avg
 
-print("{throughput:0.7f}, {ppd_avg:0.7f}, {performance:0.7f}")
+print(f"{throughput:0.7f}, {ppd_avg:0.7f}, {performance:0.7f}")
