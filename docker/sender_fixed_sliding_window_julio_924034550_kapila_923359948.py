@@ -123,3 +123,5 @@ ppd_avg = statistics.mean(ppd_array)
 performance = 0.3 * throughput / 1000 + 0.7 / ppd_avg
 
 print(f"{throughput:0.7f}, {ppd_avg:0.7f}, {performance:0.7f}")
+
+sender.close()
