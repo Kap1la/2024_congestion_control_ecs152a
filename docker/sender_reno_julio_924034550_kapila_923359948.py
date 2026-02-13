@@ -44,7 +44,7 @@ def create_packet(seq_id, payload):
 
 # read in file
 message = b''
-with open("file.mp3", "rb") as f:
+with open("./docker/file.mp3", "rb") as f:
     message = f.read()
 
 message_len = len(message)
