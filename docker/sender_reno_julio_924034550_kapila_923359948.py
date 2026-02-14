@@ -94,7 +94,7 @@ while send_base < message_len:
                 cwnd = ssthresh
                 state = State.CONGESTION_AVOIDANCE
 
-            print(f"[ACK] state={state}, cwnd={round(cwnd/MESSAGE_SIZE,2)} MSS")
+            # print(f"[ACK] state={state}, cwnd={round(cwnd/MESSAGE_SIZE,2)} MSS")
 
         # dup ack
         elif ack_id == send_base:
@@ -102,7 +102,7 @@ while send_base < message_len:
             dup_ack_count += 1
 
             if dup_ack_count == 3:
-                print("[FAST RETRANSMIT]")
+                # print("[FAST RETRANSMIT]")
 
                 ssthresh = max(cwnd / 2, MESSAGE_SIZE)
                 cwnd = ssthresh + 3 * MESSAGE_SIZE
@@ -115,11 +115,11 @@ while send_base < message_len:
             elif state == State.FAST_RECOVERY:
                 cwnd += MESSAGE_SIZE
 
-            print(f"[DUP ACK] state={state}, cwnd={round(cwnd/MESSAGE_SIZE,2)} MSS")
+            # print(f"[DUP ACK] state={state}, cwnd={round(cwnd/MESSAGE_SIZE,2)} MSS")
 
     except socket.timeout:
 
-        print("[TIMEOUT]")
+        # print("[TIMEOUT]")
 
         ssthresh = max(cwnd / 2, MESSAGE_SIZE)
         cwnd = MESSAGE_SIZE
