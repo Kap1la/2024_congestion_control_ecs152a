@@ -86,7 +86,7 @@ while not last_ack_flag:
                     last_sent_index += 1
                     ppd_start.append(time.time())
                     
-                    print(last_sent_index, "packet sent")
+                    # print(last_sent_index, "packet sent")
                     
                     if last_sent_index == len(message_array):
                         sender.sendto(create_packet(curr_seq_id, b''), receiver_addr)

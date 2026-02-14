@@ -57,7 +57,7 @@ while True:
             i += 1
             curr_seq_id = next_seq_id
 
-            print(i, " packets delivered")
+            # print(i, " packets delivered")
             ppd_end = time.time()
             ppd = ppd_end - ppd_start
             ppd_array.append(ppd)
