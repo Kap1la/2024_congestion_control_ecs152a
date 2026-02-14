@@ -27,6 +27,14 @@ fsw_performance_sd = statistics.stdev(fsw_performance)
 print(f"{fsw_throughput_avg:.7},{fsw_throughput_sd:.7},{fsw_ppd_avg_avg:.7},{fsw_ppd_avg_sd:.7},{fsw_performance_avg:.7},{fsw_performance_sd:.7}")
 
 # TCP Reno
-reno_throughput = [59.1265697,61.1773221,59.1042626]
-reno_rtt_avg = [0.7553030,1.1591652,1.1045337]
-reno_performance = [0.9445183,0.6222361,0.6514829]
+reno_throughput = [59.1265697,61.1773221,59.1042626,57.1225247,58.7858531,59.2988043,56.0382938,54.3050275,53.5749304,53.0045104]
+reno_rtt_avg = [0.7553030,1.1591652,1.1045337,1.0244642,1.1175969,0.7791407,0.9978592,0.9937882,0.9653215,0.9617490]
+reno_performance = [0.9445183,0.6222361,0.6514829,0.7004207,0.6439797,0.9162153,0.7183132,0.7206669,0.7412195,0.7437420]
+
+reno_throughput_avg = statistics.mean(reno_throughput)
+reno_throughput_sd = statistics.stdev(reno_throughput)
+reno_rtt_avg_avg = statistics.mean(reno_rtt_avg)
+reno_rtt_avg_sd = statistics.stdev(reno_rtt_avg)
+reno_performance_avg = statistics.mean(reno_performance)
+reno_performance_sd = statistics.stdev(reno_performance)
+print(f"{reno_throughput_avg:.7},{reno_throughput_sd:.7},{reno_rtt_avg_avg:.7},{reno_rtt_avg_sd:.7},{reno_performance_avg:.7},{reno_performance_sd:.7}")
